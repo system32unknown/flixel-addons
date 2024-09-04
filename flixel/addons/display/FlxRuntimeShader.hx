@@ -5,7 +5,9 @@ package flixel.addons.display;
 		#error "FlxRuntimeShader isn't available with nme or flash."
 	#end
 #else
+import flixel.addons.system.macros.FlxRuntimeShaderMacro;
 import flixel.graphics.tile.FlxGraphicsShader;
+import flixel.util.FlxStringUtil;
 #end
 #if lime
 import lime.utils.Float32Array;
@@ -13,6 +15,8 @@ import lime.utils.Float32Array;
 import openfl.display.BitmapData;
 import openfl.display.ShaderInput;
 import openfl.display.ShaderParameter;
+
+using StringTools;
 
 /**
  * An wrapper for Flixel/OpenFL's shaders, which takes fragment and vertex source
@@ -67,13 +71,11 @@ class FlxRuntimeShader extends FlxGraphicsShader
 
 		if (vertexSource == null)
 		{
-			var s = __processVertexSource(glVertexSourceRaw);
-			this.glVertexSource = s;
+			this.glVertexSource = __processVertexSource(glVertexSourceRaw);
 		}
 		else
-		{
-			var s = __processVertexSource(vertexSource);
-			this.glVertexSource = s;
+		{ 
+			this.glVertexSource = __processVertexSource(vertexSource);
 		}
 
 		@:privateAccess {
@@ -89,9 +91,8 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	@:noCompletion private function __processFragmentSource(input:String):String
 	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, glFragmentHeaderRaw);
-		result = StringTools.replace(result, PRAGMA_BODY, glFragmentBodyRaw);
-		return result;
+		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentHeaderRaw', false))
+			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentHeaderRaw', false));
 	}
 
 	/**
@@ -99,9 +100,8 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	@:noCompletion private function __processVertexSource(input:String):String
 	{
-		var result = StringTools.replace(input, PRAGMA_HEADER, glVertexHeaderRaw);
-		result = StringTools.replace(result, PRAGMA_BODY, glVertexBodyRaw);
-		return result;
+		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glVertexBodyRaw', false))
+			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glVertexBodyRaw', false));
 	}
 
 	/**
@@ -112,14 +112,14 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setFloat(name:String, value:Float):Void
 	{
-		var prop:ShaderParameter<Float> = Reflect.field(this.data, name);
+		final shaderParameter:ShaderParameter<Float> = Reflect.field(this.data, name);
 		@:privateAccess
-		if (prop == null)
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader float property ${name} not found.');
+			trace('[WARN] Shader float parameter ${name} not found.');
 			return;
 		}
-		prop.value = [value];
+		shaderParameter.value = [value];
 	}
 
 	/**
@@ -130,13 +130,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setFloatArray(name:String, value:Array<Float>):Void
 	{
-		var prop:ShaderParameter<Float> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Float> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader float[] property ${name} not found.');
+			trace('[WARN] Shader float[] parameter ${name} not found.');
 			return;
 		}
-		prop.value = value;
+		shaderParameter.value = value;
 	}
 
 	/**
@@ -147,13 +147,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setInt(name:String, value:Int):Void
 	{
-		var prop:ShaderParameter<Int> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Int> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader int property ${name} not found.');
+			trace('[WARN] Shader int parameter ${name} not found.');
 			return;
 		}
-		prop.value = [value];
+		shaderParameter.value = [value];
 	}
 
 	/**
@@ -164,13 +164,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setIntArray(name:String, value:Array<Int>):Void
 	{
-		var prop:ShaderParameter<Int> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Int> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader int[] property ${name} not found.');
+			trace('[WARN] Shader int[] parameter ${name} not found.');
 			return;
 		}
-		prop.value = value;
+		shaderParameter.value = value;
 	}
 
 	/**
@@ -180,13 +180,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setBool(name:String, value:Bool):Void
 	{
-		var prop:ShaderParameter<Bool> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Bool> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader bool property ${name} not found.');
+			trace('[WARN] Shader bool parameter ${name} not found.');
 			return;
 		}
-		prop.value = [value];
+		shaderParameter.value = [value];
 	}
 
 	/**
@@ -196,13 +196,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setBoolArray(name:String, value:Array<Bool>):Void
 	{
-		var prop:ShaderParameter<Bool> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Bool> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader bool[] property ${name} not found.');
+			trace('[WARN] Shader bool[] parameter ${name} not found.');
 			return;
 		}
-		prop.value = value;
+		shaderParameter.value = value;
 	}
 
 	/**
@@ -212,13 +212,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function setBitmapData(name:String, value:openfl.display.BitmapData):Void
 	{
-		var prop:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderInput:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
+		if (shaderInput == null)
 		{
-			trace('[WARN] Shader sampler2D property ${name} not found.');
+			trace('[WARN] Shader sampler2D input ${name} not found.');
 			return;
 		}
-		prop.input = value;
+		shaderInput.input = value;
 	}
 
 	/**
@@ -228,13 +228,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getFloat(name:String):Null<Float>
 	{
-		var prop:ShaderParameter<Float> = Reflect.field(this.data, name);
-		if (prop == null || prop.value.length == 0)
+		final shaderParameter:ShaderParameter<Float> = Reflect.field(this.data, name);
+		if (shaderParameter == null || shaderParameter.value.length == 0)
 		{
-			trace('[WARN] Shader float property ${name} not found.');
+			trace('[WARN] Shader float parameter ${name} not found.');
 			return null;
 		}
-		return prop.value[0];
+		return shaderParameter.value[0];
 	}
 
 	/**
@@ -244,13 +244,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getFloatArray(name:String):Null<Array<Float>>
 	{
-		var prop:ShaderParameter<Float> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Float> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader float[] property ${name} not found.');
+			trace('[WARN] Shader float[] parameter ${name} not found.');
 			return null;
 		}
-		return prop.value;
+		return shaderParameter.value;
 	}
 
 	/**
@@ -260,13 +260,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getInt(name:String):Null<Int>
 	{
-		var prop:ShaderParameter<Int> = Reflect.field(this.data, name);
-		if (prop == null || prop.value.length == 0)
+		final shaderParameter:ShaderParameter<Int> = Reflect.field(this.data, name);
+		if (shaderParameter == null || shaderParameter.value.length == 0)
 		{
-			trace('[WARN] Shader int property ${name} not found.');
+			trace('[WARN] Shader int parameter ${name} not found.');
 			return null;
 		}
-		return prop.value[0];
+		return shaderParameter.value[0];
 	}
 
 	/**
@@ -276,13 +276,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getIntArray(name:String):Null<Array<Int>>
 	{
-		var prop:ShaderParameter<Int> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Int> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader int[] property ${name} not found.');
+			trace('[WARN] Shader int[] parameter ${name} not found.');
 			return null;
 		}
-		return prop.value;
+		return shaderParameter.value;
 	}
 
 	/**
@@ -292,13 +292,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getBool(name:String):Null<Bool>
 	{
-		var prop:ShaderParameter<Bool> = Reflect.field(this.data, name);
-		if (prop == null || prop.value.length == 0)
+		final shaderParameter:ShaderParameter<Bool> = Reflect.field(this.data, name);
+		if (shaderParameter == null || shaderParameter.value.length == 0)
 		{
-			trace('[WARN] Shader bool property ${name} not found.');
+			trace('[WARN] Shader bool parameter ${name} not found.');
 			return null;
 		}
-		return prop.value[0];
+		return shaderParameter.value[0];
 	}
 
 	/**
@@ -308,13 +308,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getBoolArray(name:String):Null<Array<Bool>>
 	{
-		var prop:ShaderParameter<Bool> = Reflect.field(this.data, name);
-		if (prop == null)
+		final shaderParameter:ShaderParameter<Bool> = Reflect.field(this.data, name);
+		if (shaderParameter == null)
 		{
-			trace('[WARN] Shader bool[] property ${name} not found.');
+			trace('[WARN] Shader bool[] parameter ${name} not found.');
 			return null;
 		}
-		return prop.value;
+		return shaderParameter.value;
 	}
 
 	/**
@@ -324,17 +324,23 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	public function getBitmapData(name:String):Null<openfl.display.BitmapData>
 	{
-		var prop:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
-		if (prop == null)
+		var shaderInput:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
+		if (shaderInput == null)
 		{
-			trace('[WARN] Shader sampler2D property ${name} not found.');
+			trace('[WARN] Shader sampler2D input ${name} not found.');
 			return null;
 		}
-		return prop.input;
+		return shaderInput.input;
 	}
 
+	/**
+	 * Convert the shader to a readable string name. Useful for debugging.
+	 */
 	public function toString():String
 	{
-		return 'FlxRuntimeShader';
+		return FlxStringUtil.getDebugString([
+			for (field in Reflect.fields(data))
+				LabelValuePair.weak(field, Reflect.field(data, field))
+		]);
 	}
 }
