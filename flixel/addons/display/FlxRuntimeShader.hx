@@ -5,7 +5,6 @@ package flixel.addons.display;
 		#error "FlxRuntimeShader isn't available with nme or flash."
 	#end
 #else
-import flixel.addons.system.macros.FlxRuntimeShaderMacro;
 import flixel.graphics.tile.FlxGraphicsShader;
 import flixel.util.FlxStringUtil;
 #end
@@ -62,7 +61,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 
 		if (fragmentSource == null)
 		{
-			this.glFragmentSource = __processFragmentSource(FlxRuntimeShaderMacro.retrieveMetadata('glFragmentSourceRaw', false));
+			this.glFragmentSource = __processFragmentSource(glFragmentSourceRaw);
 		}
 		else
 		{
@@ -71,7 +70,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 
 		if (vertexSource == null)
 		{
-			this.glVertexSource = __processVertexSource(FlxRuntimeShaderMacro.retrieveMetadata('glVertexSourceRaw', false));
+			this.glVertexSource = __processVertexSource(glVertexSourceRaw);
 		}
 		else
 		{ 
@@ -91,8 +90,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	@:noCompletion private function __processFragmentSource(input:String):String
 	{
-		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentHeaderRaw', false))
-			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentBodyRaw', false));
+		return input.replace(PRAGMA_HEADER, glFragmentHeaderRaw).replace(PRAGMA_BODY, glFragmentBodyRaw);
 	}
 
 	/**
@@ -100,8 +98,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	@:noCompletion private function __processVertexSource(input:String):String
 	{
-		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glVertexHeaderRaw', false))
-			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glVertexBodyRaw', false));
+		return input.replace(PRAGMA_HEADER, glVertexHeaderRaw).replace(PRAGMA_BODY, glVertexBodyRaw);
 	}
 
 	/**
