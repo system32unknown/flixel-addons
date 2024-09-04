@@ -62,7 +62,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 
 		if (fragmentSource == null)
 		{
-			this.glFragmentSource = __processFragmentSource(glFragmentSourceRaw);
+			this.glFragmentSource = __processFragmentSource(FlxRuntimeShaderMacro.retrieveMetadata('glFragmentSourceRaw', false));
 		}
 		else
 		{
@@ -71,7 +71,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 
 		if (vertexSource == null)
 		{
-			this.glVertexSource = __processVertexSource(glVertexSourceRaw);
+			this.glVertexSource = __processVertexSource(FlxRuntimeShaderMacro.retrieveMetadata('glVertexSourceRaw', false));
 		}
 		else
 		{ 
