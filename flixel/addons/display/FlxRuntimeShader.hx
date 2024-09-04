@@ -92,7 +92,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	@:noCompletion private function __processFragmentSource(input:String):String
 	{
 		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentHeaderRaw', false))
-			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentHeaderRaw', false));
+			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glFragmentBodyRaw', false));
 	}
 
 	/**
@@ -100,7 +100,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	 */
 	@:noCompletion private function __processVertexSource(input:String):String
 	{
-		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glVertexBodyRaw', false))
+		return input.replace(PRAGMA_HEADER, FlxRuntimeShaderMacro.retrieveMetadata('glVertexHeaderRaw', false))
 			.replace(PRAGMA_BODY, FlxRuntimeShaderMacro.retrieveMetadata('glVertexBodyRaw', false));
 	}
 
@@ -206,7 +206,7 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	}
 
 	/**
-	 * Modify a bitmap data parameter of the shader.
+	 * Modify a bitmap data input of the shader.
 	 * @param name The name of the parameter to modify.
 	 * @param value The new value to use.
 	 */
@@ -318,13 +318,13 @@ class FlxRuntimeShader extends FlxGraphicsShader
 	}
 
 	/**
-	 * Retrieve a bitmap data parameter of the shader.
+	 * Retrieve a bitmap data input of the shader.
 	 * @param name The name of the parameter to retrieve.
 	 * @return The value of the parameter.
 	 */
 	public function getBitmapData(name:String):Null<openfl.display.BitmapData>
 	{
-		var shaderInput:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
+		final shaderInput:ShaderInput<openfl.display.BitmapData> = Reflect.field(this.data, name);
 		if (shaderInput == null)
 		{
 			trace('[WARN] Shader sampler2D input ${name} not found.');
