@@ -86,7 +86,7 @@ class FlxRayCastTilemap extends FlxTilemap
 			return false;
 		}
 
-		if (getTile(Std.int(cx), Std.int(cy)) > 0)
+		if (getTileIndex(Std.int(cx), Std.int(cy)) > 0)
 		{
 			// start point is inside a block
 			Result.x = Start.x;
@@ -155,7 +155,7 @@ class FlxRayCastTilemap extends FlxTilemap
 			if (tMaxX < tMaxY)
 			{
 				cx = cx + stepX;
-				if (getTile(Std.int(cx), Std.int(cy)) > 0)
+				if (getTileIndex(Std.int(cx), Std.int(cy)) > 0)
 				{
 					hitTile = true;
 					break;
@@ -173,7 +173,7 @@ class FlxRayCastTilemap extends FlxTilemap
 			{
 				cy = cy + stepY;
 
-				if (getTile(Std.int(cx), Std.int(cy)) > 0)
+				if (getTileIndex(Std.int(cx), Std.int(cy)) > 0)
 				{
 					hitTile = true;
 					break;
@@ -212,7 +212,7 @@ class FlxRayCastTilemap extends FlxTilemap
 
 	public function tileAt(CoordX:Float, CoordY:Float):Int
 	{
-		return getTile(Std.int((CoordX - x) / scaledTileWidth), Std.int((CoordY - y) / scaledTileHeight));
+		return getTileIndex(Std.int((CoordX - x) / scaledTileWidth), Std.int((CoordY - y) / scaledTileHeight));
 	}
 
 	public function tileIndexAt(CoordX:Float, CoordY:Float):Int
