@@ -1,3 +1,16 @@
+# 4.0.0 (TBD)
+Removed deprecated classes
+- `FlxRayCastTilemap`: `FlxBaseTilemap` has an all-around better `ray()` method ([#455](https://github.com/HaxeFlixel/flixel-addons/pull/455))
+- `FlxMouseControl`: Use `FlxMouseEvent`, instead ([#455](https://github.com/HaxeFlixel/flixel-addons/pull/455))
+
+## 3.3.2 (January 31, 2025)
+------------------------------
+- Fix dox, attempt 2
+
+3.3.1 (January 31, 2025)
+------------------------------
+- Fix dox
+
 3.3.0 (December 10, 2024)
 ------------------------------
 #### New Features:
