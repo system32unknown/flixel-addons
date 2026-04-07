@@ -93,7 +93,7 @@ class FlxBackdrop extends FlxSprite
 	 * Creates an instance of the FlxBackdrop class, used to create infinitely scrolling backgrounds.
 	 *
 	 * @param   graphic     The image you want to use for the backdrop.
-	 * @param   repeatAxes  If the backdrop should repeat on the X axis.
+	 * @param   repeatAxes  The axes on which to repeat. The default, `XY` will tile the entire camera.
 	 * @param   spacingX    Amount of spacing between tiles on the X axis
 	 * @param   spacingY    Amount of spacing between tiles on the Y axis
 	 */
@@ -467,13 +467,6 @@ class FlxBackdrop extends FlxSprite
 				}
 				else
 				{
-					if (!camera.rotateSprite && camera.angle != 0)
-						@:privateAccess {
-						mat.translate(-camera.width / 2, -camera.height / 2);
-						mat.rotateWithTrig(camera._cosAngle, camera._sinAngle);
-						mat.translate(camera.width / 2, camera.height / 2);
-					}
-					
 					drawItem.addQuad(frame, _tileMatrix, colorTransform);
 				}
 			}
@@ -523,7 +516,7 @@ class FlxBackdrop extends FlxSprite
 			(frameHeight + spacing.y) * scale.y
 		);
 
-		final viewMargins = camera.getViewMarginRect();
+		var viewMargins = camera.getViewMarginRect();
 		var tilesX = 1;
 		var tilesY = 1;
 		if (repeatAxes != NONE)
@@ -591,9 +584,9 @@ class FlxBackdrop extends FlxSprite
 		if (_blitGraphic == null || (_blitGraphic.width != graphicSizeX || _blitGraphic.height != graphicSizeY))
 		{
 			if (_blitGraphic != null)
-				_blitGraphic.useCount--;
+				_blitGraphic.decrementUseCount();
 			_blitGraphic = FlxG.bitmap.create(graphicSizeX, graphicSizeY, 0x0, true);
-			_blitGraphic.useCount++;
+			_blitGraphic.incrementUseCount();
 		}
 
 		var pixels = _blitGraphic.bitmap;
