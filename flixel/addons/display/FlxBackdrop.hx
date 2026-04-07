@@ -287,6 +287,7 @@ class FlxBackdrop extends FlxSprite
 				final origTileSizeY = frameHeight + spacing.y;
 				_point.y = modMin(_point.y + frameHeight, origTileSizeY, viewMargins.top) - frameHeight;
 			}
+			viewMargins.put();
 		}
 
 		if (drawBlit)
