@@ -1,7 +1,6 @@
 package flixel.addons.plugin.screengrab;
 
 #if !js
-import openfl.Lib;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.geom.Matrix;
@@ -12,7 +11,7 @@ import flixel.FlxG;
 import flixel.input.keyboard.FlxKey;
 #if sys
 import lime.ui.FileDialog;
-import lime.ui.FileDialogFilter;
+import lime.ui.FileDialogType;
 import openfl.display.PNGEncoderOptions;
 #else
 import openfl.net.FileReference;
@@ -176,24 +175,41 @@ class FlxScreenGrab extends FlxBasic
 		file.save(png, Filename);
 		#elseif (!lime_legacy || lime < "2.9.0")
 		var documentsDirectory = "";
-
 		#if lime_legacy
 		documentsDirectory = openfl.filesystem.File.documentsDirectory.nativePath;
 		#else
 		documentsDirectory = lime.system.System.documentsDirectory;
 		#end
 
-		FileDialog.saveFile(FlxG.stage.window, function(filepath:String, filter):Void
+		var fd:FileDialog = new FileDialog();
+		
+		var path = "";
+		
+		fd.onSelect.add(function(str:String)
 		{
-			if (filepath != null)
-			{
-				var path = fixFilename(filepath);
-				var f = sys.io.File.write(path, true);
-				f.writeString(png.readUTFBytes(png.length));
-				f.close();
-				path = null;
-			}
-		}, [new FileDialogFilter("PNG images", "png")], documentsDirectory);
+			path = fixFilename(str);
+			var f = sys.io.File.write(path, true);
+			f.writeString(png.readUTFBytes(png.length));
+			f.close();
+			path = null;
+		});
+		
+		try
+		{
+			fd.browse(FileDialogType.SAVE, "*.png", documentsDirectory);
+		}
+		catch (msg:String)
+		{
+			path = Filename; // if there was an error write out to default directory (game install directory)
+		}
+		
+		if (path != "" && path != null) // if path is empty, the user cancelled the save operation and we can safely do nothing
+		{
+			path = fixFilename(path);
+			var f = sys.io.File.write(path, true);
+			f.writeString(png.readUTFBytes(png.length));
+			f.close();
+		}
 		#end
 	}
 
